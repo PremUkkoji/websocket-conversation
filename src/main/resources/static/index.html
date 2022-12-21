@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Conversation</title>
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/app.js"></script>
+</head>
+<body>
+<div>
+    <form>
+        <label for="connect">WebSocket connection : </label>
+        <button id="connect" type="submit">Connect</button>
+        <button id="disconnect" type="submit" disabled="disabled">Disconnect</button>
+    </form>
+
+    <table id="conversation">
+        <thead>
+        <tr>
+            <th>Conversations : </th>
+        </tr>
+        </thead>
+        <tbody id="conversation-container">
+        </tbody>
+    </table>
+
+    <form>
+        <label for="message">Type message : </label>
+        <input type="text" id="message" placeholder="message here ...">
+        <button id="send" type="submit">Send</button>
+    </form>
+</div>
+</body>
+</html>
