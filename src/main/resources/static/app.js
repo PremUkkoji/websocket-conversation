@@ -18,9 +18,14 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/conversations', function (response) {
+        stompClient.subscribe('/chatroom/public', function (response) {
             console.log('Data: ' + response);
             showMessage(response.body);
+        });
+
+        stompClient.subscribe('/user/' + $("#sender").val() + '/private', function (response) {
+            console.log('Data: ' + response);
+            showPrivateMessage(JSON.stringify(response.body));
         });
     });
 }
@@ -38,13 +43,28 @@ function sendName() {
     let message = $("#message").val();
 
     stompClient !== null ?
-        stompClient.send("/websocketapp/interact", {}, message) :
+        stompClient.send("/websocketapp/chatroom-message", {}, message) :
         alert("Websocket not connected");
     showMessage("You : " + message);
 }
 
+function sendPrivateName() {
+    let sender = $("#sender").val();
+    let receiver = $("#receiver").val();
+    let message = $("#message").val();
+
+    stompClient !== null ?
+        stompClient.send("/websocketapp/private-message", {}, JSON.stringify({"senderName": sender, "message": message, "receiverName": receiver})) :
+        alert("Websocket not connected");
+    showPrivateMessage("You : " + message);
+}
+
 function showMessage(message) {
-    $("#conversation-container").append("<tr><td>" + message + "</td></tr>");
+    $("#public-conversation-container").append("<tr><td>" + message + "</td></tr>");
+}
+
+function showPrivateMessage(message) {
+    $("#private-conversation-container").append("<tr><td>" + message + "</td></tr>");
 }
 
 $(function () {
@@ -54,4 +74,5 @@ $(function () {
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#send" ).click(function() { sendName(); });
+    $( "#sendprivate" ).click(function() { sendPrivateName(); })
 });
